@@ -1,0 +1,77 @@
+[
+'生成文件头
+call GenerateFileHeader()
+call writeln("package " & $classPackage & ";")
+call writeln("import javax.annotation.*;")
+call writeln("import javax.annotation.concurrent.NotThreadSafe;")
+call writeln("import java.util.*;")
+call writeln("import com.olivephone.office.opc.base.*;")
+call writeln("import com.olivephone.office.opc.OfficeElement;")
+call writeln("import org.xmlpull.v1.XmlSerializer;")
+'call PrintType("//", $class)
+
+call writeln("@NotThreadSafe")
+call writeln("public class " & $class.CodeName & " extends OfficeElement {")
+call writeln("  private static final long serialVersionUID = -1L;")
+
+' Attributes
+foreach $attr in $class.Attributes
+	$attrClass = $attr.DataType
+	'call PrintMember("	//", $attr)
+	if($attr.IsRequired)
+		call writeln("	@Nonnull")
+	else
+		call writeln("	@Nullable")
+	endif
+	if($attrClass.IsNativeBound)
+		call writeln("	public " & $attrClass.NativeBinding.ValueType & " " & $attr.CodeName & ";")
+	else
+		call writeln("	public FIXME " & $attr.CodeName & ";")
+	endif
+next
+
+' Members
+call writeln("	@Nonnull")
+call writeln("	private List<OfficeElement> members;")
+
+
+' Init
+call writeln("	public " & $class.CodeName & "() {")
+foreach $attr in $class.Attributes
+	$attrClass = $attr.DataType
+	if($attr.IsDefault)
+		if($attrClass.IsNativeBound)
+			call writeln("		this." & $attr.CodeName & " = " & $attrClass.NativeBinding.ValueHandler & ".valueOf(\"" & $attr.Default & "\");")
+		else
+			call writeln("		this." & $attr.CodeName & " = FIXME ;")
+		endif
+	endif
+next
+call writeln("		this.members = new LinkedList<OfficeElement>();")
+call writeln("	}")
+
+call writeln("	public Iterator<OfficeElement> getMembers() {")
+call writeln("		return this.members.iterator();")
+call writeln("	}")
+call writeln("	public void appendMember(OfficeElement member) {")
+call writeln("		this.members.add(member);")
+call writeln("	}")
+call writeln("	public boolean isValidateMember(OfficeElement member) {")
+call writeln("		Class<? extends OfficeElement> memberClass = member.getClass();")
+foreach $element in $class.Elements
+	if $element.IsFirst
+		write("		if")
+	else
+		write("		else if")
+	endif
+	call writeln("(" & $element.DataType.CodeName & ".class.isInstance(memberClass)) {")
+	call writeln("			return true;")
+	call writeln("		}")
+next
+call writeln("		return false;")
+call writeln("	}")
+
+include "office2007.java.template.serializer.spl"
+call writeln("}")
+
+]
