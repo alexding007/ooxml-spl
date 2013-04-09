@@ -1,0 +1,369 @@
+[
+' Copyright (C) Unpublished by OlivePhone Co.,Ltd. All rights reserved.
+' OlivePhone Co.,Ltd. Confidential and Proprietary.
+' Unless otherwise explicitly stated in writing, this software may not be used by or disclosed to any third party.
+' This software is subject to copyright protection under the laws of the People's Republic of China and other countries.
+' Unless otherwise explicitly stated, this software is only provided by OlivePhone Co.,Ltd. "AS IS".
+
+'''''''''' 定义固定常量 '''''''''
+' 输出文件夹
+$outputpath = "C:/Users/Ding/Desktop/Labs/JavaOPCTest/src"
+
+$basePackage = "com.olivephone.office.opc"
+$baseFolder = $outputpath & "/com/olivephone/office/opc"
+
+
+'''''''''' 定义生成规则 '''''''''
+
+''''' 命名规范 ''''''
+' 允许的命名字符
+default  "ValidFirstCharSet"			is	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+default	"ValidCharSet"				is	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789"
+' 定义非法字符
+default	"InvalidCharReplacement"	is	"_"
+' 匿名类型设定
+default	"AnonTypePrefix"			is	""
+default	"AnonTypeSuffix"			is	"Type"
+' 类类型设定
+default	"ClassNamePrefix"			is	""
+default	"ClassNameSuffix"			is	""
+' 枚举类型设定
+default	"EnumerationPrefix"			is	"E"
+default	"EnumerationUpperCase"		is	"on"
+
+default	"FallbackName"				is	"Name"
+
+''''' 保留字 '''''
+reserve "abstract"
+reserve "boolean"
+reserve "break"
+reserve "byte"
+reserve "case"
+reserve "catch"
+reserve "char"
+reserve "class"
+reserve "const"
+reserve "continue"
+reserve "default"
+reserve "do"
+reserve "double"
+reserve "else"
+reserve "extends"
+reserve "false"
+reserve "final"
+reserve "finally"
+reserve "float"
+reserve "for"
+reserve "goto"
+reserve "if"
+reserve "implements"
+reserve "import"
+reserve "instanceof"
+reserve "int"
+reserve "interface"
+reserve "long"
+reserve "native"
+reserve "new"
+reserve "null"
+reserve "package"
+reserve "private"
+reserve "protected"
+reserve "public"
+reserve "return"
+reserve "short"
+reserve "static"
+reserve "strictfp"
+reserve "super"
+reserve "switch"
+reserve "synchronized"
+reserve "this"
+reserve "throw"
+reserve "throws"
+reserve "transient"
+reserve "true"
+reserve "try"
+reserve "void"
+reserve "volatile"
+reserve "while"
+reserve "Class"
+reserve "value"
+reserve "Node"
+reserve "String"
+
+' valueOf(exp)
+map schemanativetype	"anySimpleType"			to	"String,ITypeFormatter.StringFormatter",
+						"anyURI"				to	"String,ITypeFormatter.StringFormatter",
+						"string"				to	"String,ITypeFormatter.StringFormatter",
+						"normalizedString"		to	"String,ITypeFormatter.StringFormatter",
+						"token"					to	"String,ITypeFormatter.StringFormatter",
+
+						"hexBinary"				to	"String,ITypeFormatter.StringFormatter",
+						"base64Binary"			to	"String,ITypeFormatter.StringFormatter",
+						
+						"ID"					to	"String,ITypeFormatter.StringFormatter",
+						"IDREF"					to	"String,ITypeFormatter.StringFormatter",
+						"IDREFS"				to	"String\[\],NONE",
+						
+						"boolean"				to	"Boolean,ITypeFormatter.BooleanFormatter",
+						"byte"					to	"Byte,ITypeFormatter.ByteFormatter",
+						"unsignedByte"			to	"Short,ITypeFormatter.ShortFormatter",
+						"short"					to	"Short,ITypeFormatter.ShortFormatter",
+						"unsignedShort"			to	"Integer,ITypeFormatter.IntegerFormatter",
+						"int"					to	"Integer,ITypeFormatter.IntegerFormatter",
+						"unsignedInt"			to	"Long,ITypeFormatter.LongFormatter",
+						"long"					to	"Long,ITypeFormatter.LongFormatter",
+						"unsignedLong"			to	"java.math.BigInteger,NONE",
+						"float"					to	"Float,ITypeFormatter.FloatFormatter",
+						"double"				to	"Double,ITypeFormatter.DoubleFormatter",
+						"nonNegativeInteger"	to	"java.math.BigInteger,NONE",
+						"nonPositiveInteger"	to	"java.math.BigInteger,NONE",
+						"negativeInteger"		to	"java.math.BigInteger,NONE",
+						"positiveInteger"		to	"java.math.BigInteger,NONE",
+						"integer"				to	"java.math.BigInteger,NONE",
+						"decimal"				to	"java.math.BigDecimal,NONE",
+						
+						"duration"				to	"Long,NONE",			'PnYnMnDTnHnMnS
+						"time"					to	"java.util.Date,NONE",	'hh:mm:ss
+						"gDay"					to	"java.util.Date,NONE",	'-DD
+						"gMonth"				to	"java.util.Date,NONE",	'-MM
+						"gMonthDay"				to	"java.util.Date,NONE",	'-MM-DD
+						"gYear"					to	"java.util.Date,NONE",	'YYYY
+						"gYearMonth"			to	"java.util.Date,NONE",	'YYYY-MM
+						"date"					to	"java.util.Date,NONE",	'YYYY-MM-DD
+						"dateTime"				to	"java.util.Date,NONE"	'YYYY-MM-DDThh:mm:ss
+
+'''''''''' 定义常用函数 '''''''''
+
+
+sub writeln($argText)
+write $argText & "\n"
+endsub
+
+sub fail()
+write($a.b.c.d.e)
+endsub
+
+sub GenerateFileHeader()
+]/*
+ * Copyright (C) Unpublished by OlivePhone Co.,Ltd. All rights reserved.
+ * OlivePhone Co.,Ltd. Confidential and Proprietary.
+ * Unless otherwise explicitly stated in writing, this software may not be used by or disclosed to any third party.
+ * This software is subject to copyright protection under the laws of the People's Republic of China and other countries.
+ * Unless otherwise explicitly stated, this software is only provided by OlivePhone Co.,Ltd. "AS IS".
+ */
+[
+endsub
+
+sub PrintType($prefix, $_type)
+	call writeln($prefix & "CodeName				:	" & $_type.CodeName)
+	call writeln($prefix & "LocalName				:	" & $_type.LocalName)
+	call writeln($prefix & "Namespace				:	" & $_type.Namespace.NamespaceURI)
+	call writeln($prefix & "IsSimpleType			:	" & $_type.IsSimpleType)
+	call writeln($prefix & "IsDerived				:	" & $_type.IsDerived)
+	call writeln($prefix & "IsDerivedByExtension	:	" & $_type.IsDerivedByExtension)
+	call writeln($prefix & "IsDerivedByRestriction	:	" & $_type.IsDerivedByRestriction)
+	call writeln($prefix & "IsDerivedByUnion		:	" & $_type.IsDerivedByUnion)
+	call writeln($prefix & "IsDerivedByList			:	" & $_type.IsDerivedByList)
+	if($_type.IsDerived)
+		call writeln($prefix & "BaseType				:	" & $_type.BaseType.CodeName)
+	endif
+	call writeln($prefix & "IsDocumentRootType		:	" & $_type.IsDocumentRootType)
+	call writeln($prefix & "IsFinal					:	" & $_type.IsFinal)
+	call writeln($prefix & "IsMixed					:	" & $_type.IsMixed)
+	call writeln($prefix & "IsAbstract				:	" & $_type.IsAbstract)
+	call writeln($prefix & "IsGlobal				:	" & $_type.IsGlobal)
+	call writeln($prefix & "IsAnonymous				:	" & $_type.IsAnonymous)
+	if($_type.IsSimpleType)
+		call writeln($prefix & "	IsNativeBound			:	" & $_type.IsNativeBound)
+		if($_type.IsNativeBound)
+			if($_type.NativeBinding <> 0)
+				call writeln($prefix & "	NativeBinding.ValueType		:	" & $_type.NativeBinding.ValueType)
+				call writeln($prefix & "	NativeBinding.ValueHandler	:	" & $_type.NativeBinding.ValueHandler)
+			endif
+		endif
+		if($_type.Facets <> 0)
+			call writeln($prefix & "	Facets.DeclaringType		:	" & $_type.Facets.DeclaringType.CodeName)
+			call writeln($prefix & "	Facets.Whitespace			:	" & $_type.Facets.Whitespace)
+			call writeln($prefix & "	Facets.MinLength			:	" & $_type.Facets.MinLength)
+			call writeln($prefix & "	Facets.MaxLength			:	" & $_type.Facets.MaxLength)
+			call writeln($prefix & "	Facets.MinInclusive			:	" & $_type.Facets.MinInclusive)
+			call writeln($prefix & "	Facets.MinExclusive			:	" & $_type.Facets.MinExclusive)
+			call writeln($prefix & "	Facets.MaxInclusive			:	" & $_type.Facets.MaxInclusive)
+			call writeln($prefix & "	Facets.MaxExclusive			:	" & $_type.Facets.MaxExclusive)
+			call writeln($prefix & "	Facets.TotalDigits			:	" & $_type.Facets.TotalDigits)
+			call writeln($prefix & "	Facets.FractionDigits		:	" & $_type.Facets.FractionDigits)
+			foreach $_facet in $_type.Facets.List
+				call writeln($prefix & "	Facets.Facet.LocalName		:	" & $_facet.LocalName)
+				call writeln($prefix & "	Facets.Facet.NamespaceURI	:	" & $_facet.NamespaceURI)
+				call writeln($prefix & "	Facets.Facet.FacetType		:	" & $_facet.FacetType)
+				call writeln($prefix & "	Facets.Facet.DeclaringType	:	" & $_facet.DeclaringType.CodeName)
+				call writeln($prefix & "	Facets.Facet.FacetCheckerName:	" & $_facet.FacetCheckerName)
+				call writeln($prefix & "	Facets.Facet.FacetValue		:	" & $_facet.FacetValue)
+			next
+		endif
+		call writeln($prefix & "	Whitespace					:	" & $_type.Whitespace)
+	endif
+endsub
+
+sub PrintMember($prefix, $member)
+	call writeln($prefix & "DeclaringType	:	" & $member.DeclaringType.CodeName)
+	call writeln($prefix & "ContainingType	:	" & $member.ContainingType.CodeName)
+	call writeln($prefix & "DataType		:	" & $member.DataType.CodeName)
+	call writeln($prefix & "CodeName		:	" & $member.CodeName)
+	call writeln($prefix & "LocalName		:	" & $member.LocalName)
+	call writeln($prefix & "NamespaceURI	:	" & $member.NamespaceURI)
+	call writeln($prefix & "IsAttribute		:	" & $member.IsAttribute)
+	call writeln($prefix & "IsOptional		:	" & $member.IsOptional)
+	call writeln($prefix & "IsRequired		:	" & $member.IsRequired)
+	call writeln($prefix & "IsFixed			:	" & $member.IsFixed)
+	call writeln($prefix & "IsDefault		:	" & $member.IsDefault)
+	call writeln($prefix & "IsNillable		:	" & $member.IsNillable)
+	call writeln($prefix & "IsUseQualified	:	" & $member.IsUseQualified)
+	call writeln($prefix & "MinOccurs		:	" & $member.MinOccurs)
+	call writeln($prefix & "MaxOccurs		:	" & $member.MaxOccurs)
+	call writeln($prefix & "Default			:	" & $member.Default)
+endsub
+
+sub packageOfURI($uri, ByRef $targetPackage, ByRef $targetFolder)
+	$subPackage = ""
+	$subFolder = ""
+	switch $uri
+	case "http://www.w3.org/2001/XMLSchema":
+		$subPackage = "xsd"
+		$subFolder = "xsd"
+	case "http://schemas.openxmlformats.org/package/2006/content-types":
+		$subPackage = "pkg.contentTypes"
+		$subFolder = "pkg/contentTypes"
+	case "http://schemas.openxmlformats.org/package/2006/relationships":
+		$subPackage = "pkg.relationships"
+		$subFolder = "pkg/relationships"
+	case "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+		$subPackage = "pkg.meta.coreProperties"
+		$subFolder = "pkg/meta/coreProperties"
+	case "http://schemas.openxmlformats.org/schemaLibrary/2006/main"
+		$subPackage = "schemaLibrary"
+		$subFolder = "schemaLibrary"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties"
+		$subPackage = "officeDocument.customProperties"
+		$subFolder = "officeDocument/customProperties"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"
+		$subPackage = "officeDocument.extendedProperties"
+		$subFolder = "officeDocument/extendedProperties"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/sharedTypes"
+		$subPackage = "officeDocument.sharedTypes"
+		$subFolder = "officeDocument/sharedTypes"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"
+		$subPackage = "officeDocument.docPropsVTypes"
+		$subFolder = "officeDocument/docPropsVTypes"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/math"
+		$subPackage = "officeDocument.math"
+		$subFolder = "officeDocument/math"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/bibliography"
+		$subPackage = "officeDocument.bibliography"
+		$subFolder = "officeDocument/bibliography"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/characteristics"
+		$subPackage = "officeDocument.characteristics"
+		$subFolder = "officeDocument/characteristics"
+	case "http://schemas.openxmlformats.org/officeDocument/2006/customXml"
+		$subPackage = "officeDocument.customXml"
+		$subFolder = "officeDocument/customXml"
+	case "http://schemas.openxmlformats.org/drawingml/2006/main"
+		$subPackage = "dml"
+		$subFolder = "dml"
+	case "http://schemas.openxmlformats.org/drawingml/2006/chart"
+		$subPackage = "dml.chart"
+		$subFolder = "dml/chart"
+	case "http://schemas.openxmlformats.org/drawingml/2006/diagram"
+		$subPackage = "dml.diagram"
+		$subFolder = "dml/diagram"
+	case "http://schemas.openxmlformats.org/drawingml/2006/picture"
+		$subPackage = "dml.picture"
+		$subFolder = "dml/picture"
+	case "http://schemas.openxmlformats.org/drawingml/2006/lockedCanvas"
+		$subPackage = "dml.lockedCanvas"
+		$subFolder = "dml/lockedCanvas"
+	case "http://schemas.openxmlformats.org/drawingml/2006/chartDrawing"
+		$subPackage = "dml.chartDrawing"
+		$subFolder = "dml/chartDrawing"
+	case "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+		$subPackage = "dml.wordprocessingDrawing"
+		$subFolder = "dml/wordprocessingDrawing"
+	case "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing"
+		$subPackage = "dml.spreadsheetDrawing"
+		$subFolder = "dml/spreadsheetDrawing"
+	case "http://schemas.microsoft.com/office/drawing/2010/main"
+		$subPackage = "msoffice.drawing"
+		$subFolder = "msoffice/drawing"
+	case "http://schemas.microsoft.com/office/powerpoint/2010/main"
+		$subPackage = "msoffice.powerpoint"
+		$subFolder = "msoffice/powerpoint"
+	case "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+		$subPackage = "wml"
+		$subFolder = "wml"
+	case "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+		$subPackage = "sml"
+		$subFolder = "sml"
+	case "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+		$subPackage = "sml"
+		$subFolder = "sml"
+	case "http://schemas.openxmlformats.org/presentationml/2006/main"
+		$subPackage = "pml"
+		$subFolder = "pml"
+	case "urn:schemas-microsoft-com:vml"
+		$subPackage = "vml"
+		$subFolder = "vml"
+	case "urn:schemas-microsoft-com:office:office"
+		$subPackage = "vml.office"
+		$subFolder = "vml/office"
+	case "urn:schemas-microsoft-com:office:word"
+		$subPackage = "vml.word"
+		$subFolder = "vml/word"
+	case "urn:schemas-microsoft-com:office:excel"
+		$subPackage = "vml.excel"
+		$subFolder = "vml/excel"
+	case "urn:schemas-microsoft-com:office:powerpoint"
+		$subPackage = "vml.powerpoint"
+		$subFolder = "vml/powerpoint"
+	case "http://www.w3.org/1998/Math/MathML"
+		$subPackage = "mathml"
+		$subFolder = "mathml"
+	case "http://www.w3.org/1998/Math/MathML"
+		$subPackage = "inkml"
+		$subFolder = "inkml"
+	default:
+		$subPackage = "ext"
+		$subFolder = "ext"
+	endswitch
+	$targetPackage = $basePackage & "." & $subPackage
+	$targetFolder = $baseFolder & "/" & $subFolder
+endsub
+
+
+' 输出XSD信息
+'create $outputpath & "/" & $TheLibrary.CodeName & ".info"
+'call writeln("SchemaFilename : " & $TheLibrary.SchemaFilename)
+'call writeln("SchemaType : " & $TheLibrary.SchemaType)
+'call writeln("Guid : " & $TheLibrary.Guid)
+'call writeln("CodeName : " & $TheLibrary.CodeName)
+'close
+
+
+$classPackage = $basePackage
+$classFolder = $baseFolder
+
+foreach $namespace in $TheLibrary.SchemaNamespaces
+	' XSD中包含多个命名空间
+	foreach $class in $namespace.Types
+		call packageOfURI($namespace.NamespaceURI, $classPackage, $classFolder)
+		if $class.IsSimpleType
+	'		create $classFolder & "/" & $class.CodeName & ".java"
+	'		include "office2007.java.template.simple.spl"
+	'		close
+		else
+			create $classFolder & "/" & $class.CodeName & ".java"
+			include "office2007.java.template.complex.spl"
+			close
+		endif
+	next
+next
+]
