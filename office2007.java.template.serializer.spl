@@ -1,0 +1,39 @@
+[
+'OfficeElement serialization
+
+'call writeln("  static class ElementSerializer {")
+call writeln("	public void serialize(OfficeElement element, XmlSerializer serializer, String tagName) {")
+call writeln("		try {")
+call writeln("			" & $class.CodeName & " elem = (" & $class.CodeName & ")element;")
+call writeln("			serializer.startTag(\"" & $class.Namespace.NamespaceURI & "\", tagName);")
+
+' write attribute
+call writeln("			//write atribute")
+foreach $attr in $class.Attributes
+call writeln("			serializer.attribute(\"" & $attr.NamespaceURI & "\",\"" & $attr.CodeName & "\", " & "elem." & $attr.CodeName & ".toString());")
+next
+
+' write child element
+call writeln("")
+call writeln("			//write child element")
+foreach $elem in $class.Elements
+call writeln("			//" & $elem.CodeName)
+next
+
+call writeln("			Iterator<OfficeElement> iterator = elem.getMembers();")
+call writeln("			while (iterator.hasNext()) {")
+call writeln("				OfficeElement child = iterator.next();")
+call writeln("				child.serialize(child, serializer, child.getTagName());")
+call writeln("			}")
+call writeln("			serializer.endTag(\"" & $class.Namespace.NamespaceURI & "\", tagName);")
+
+call writeln("		} catch (Exception e) {")
+call writeln("			System.err.println(\"" & $class.CodeName & "\");")
+call writeln("			System.err.println(e);")
+call writeln("		}")
+call writeln("	}")	
+
+'call writeln("	}")	
+
+
+]
